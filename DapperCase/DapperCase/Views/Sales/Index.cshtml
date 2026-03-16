@@ -1,0 +1,138 @@
+﻿@model DapperCase.Dtos.SalesPageDto
+@{
+    ViewData["Title"] = "Veri Listesi";
+}
+
+<style>
+    .table-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .table-headline h2 {
+        margin: 0;
+        font-size: 26px;
+    }
+
+    .table-headline p {
+        margin: 6px 0 0 0;
+        color: #8ea4c7;
+        font-size: 14px;
+    }
+
+    .table-stats {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .table-chip {
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.06);
+        padding: 10px 14px;
+        border-radius: 14px;
+        color: #dbeafe;
+        font-size: 13px;
+    }
+
+    .sales-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .sales-table td:nth-child(5),
+    .sales-table td:nth-child(6) {
+        font-weight: 700;
+    }
+
+    .sales-table td:nth-child(5) {
+        color: #f8fbff;
+    }
+
+    .sales-table td:nth-child(6) {
+        color: #4ade80;
+    }
+
+    .pagination {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .page-info {
+        color: #cbd5e1;
+        padding: 10px 14px;
+        background: rgba(255,255,255,.03);
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,.05);
+    }
+</style>
+
+<div class="panel">
+    <div class="table-toolbar">
+        <div class="table-headline">
+            <h2>Sales Veri Listesi</h2>
+            <p>Sayfalı kayıt görüntüleme ve hızlı satış takibi</p>
+        </div>
+
+        <div class="table-stats">
+            <div class="table-chip">
+                <i class="fa-solid fa-layer-group"></i> Sayfa: @Model.CurrentPage
+            </div>
+            <div class="table-chip">
+                <i class="fa-solid fa-table"></i> Toplam Sayfa: @Model.TotalPages
+            </div>
+        </div>
+    </div>
+
+    <div class="sales-table-wrapper">
+        <table class="sales-table">
+            <thead>
+                <tr>
+                    <th>Order Id</th>
+                    <th>Tarih</th>
+                    <th>Müşteri</th>
+                    <th>Adet</th>
+                    <th>Revenue</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Sales)
+                {
+                    <tr>
+                        <td>@item.order_id</td>
+                        <td>@item.order_date.ToString("dd.MM.yyyy")</td>
+                        <td>@item.customer_id</td>
+                        <td>@item.quantity</td>
+                        <td>@item.revenue.ToString("N2")</td>
+                        <td>@item.profit.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        @if (Model.CurrentPage > 1)
+        {
+            <a class="btn-nav" href="/Sales/Index?page=@(Model.CurrentPage - 1)">
+                <i class="fa-solid fa-arrow-left"></i> Önceki
+            </a>
+        }
+
+        <span class="page-info">Sayfa @Model.CurrentPage / @Model.TotalPages</span>
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <a class="btn-nav" href="/Sales/Index?page=@(Model.CurrentPage + 1)">
+                Sonraki <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        }
+    </div>
+</div>
